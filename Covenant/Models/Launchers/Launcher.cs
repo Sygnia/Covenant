@@ -60,7 +60,7 @@ namespace Covenant.Models.Launchers
         public string LauncherString { get; set; } = "";
         public string StagerCode { get; set; } = "";
 
-        [NotMapped, JsonIgnore, System.Text.Json.Serialization.JsonIgnore]
+        [NotMapped]
         public string Base64ILByteString
         {
             get
