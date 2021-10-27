@@ -741,16 +741,24 @@ namespace GruntExecutor
                     {
                         this._Pipe.Close();
                     }
+                }
+                catch (Exception) { }
+            }
+            lock (this._PipeWriteLock)
+            {
+                try
+                {
                     if (this._PipeWrite != null)
                     {
                         this._PipeWrite.Close();
                     }
                 }
                 catch (Exception) { }
-                this._Pipe = null;
-                this._PipeWrite = null;
-                this.IsConnected = false;
             }
+            this._Pipe = null;
+            this._PipeWrite = null;
+            this.IsConnected = false;
+
         }
 
         private void InitializePipe()
@@ -768,8 +776,6 @@ namespace GruntExecutor
                     this.Pipe = newServerPipe;
 
                     Console.WriteLine("Creating write pipe");
-                    PipeSecurity psWrite = new PipeSecurity();
-                    psWrite.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), PipeAccessRights.FullControl, AccessControlType.Allow));
                     NamedPipeServerStream newServerPipeWrite = new NamedPipeServerStream(this.PipeNameWrite, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 1024, 1024, ps);
                     newServerPipeWrite.WaitForConnection();
                     this.PipeWrite = newServerPipe;
