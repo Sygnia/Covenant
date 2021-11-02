@@ -36,3 +36,6 @@ _/
 
 # Public keys
 *.cer
+
+# Tasks Json File
+appsettings.json
