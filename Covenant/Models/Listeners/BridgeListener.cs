@@ -127,19 +127,33 @@ namespace Covenant.Models.Listeners
             };
             while (!token.IsCancellationRequested)
             {
-                string data = NetworkReadString(stream, token);
-                if (data == null)
+                try
                 {
-                    return;
-                }
-                else
-                {
-                    List<string> parsed = data.ParseExact(((BridgeProfile)this.Profile).WriteFormat.Replace("{DATA}", "{0}").Replace("{GUID}", "{1}")).ToList();
-                    if (parsed.Count == 2)
+                    string data = NetworkReadString(stream, token);
+                    if (data == null)
                     {
-                        _guids.Add(parsed[1]);
-                        await this.InternalListener.Write(parsed[1], parsed[0]);
+                        return;
                     }
+                    else
+                    {
+                        List<string> parsed = data.ParseExact(((BridgeProfile)this.Profile).WriteFormat.Replace("{DATA}", "{0}").Replace("{GUID}", "{1}")).ToList();
+                        if (parsed.Count == 2)
+                        {
+                            string parsed_guid = parsed[1];
+                            if (parsed_guid.Contains("\0"))
+                            {
+                                Console.WriteLine("Grunt GUID too long, removing data that's probably important.");
+                                parsed_guid = parsed_guid.Substring(0, parsed_guid.IndexOf('\0'));
+                            }
+
+                            _guids.Add(parsed_guid);
+                            await this.InternalListener.Write(parsed_guid, parsed[0]);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Unkown error, stopping to read from socket");
                 }
             }
         }
