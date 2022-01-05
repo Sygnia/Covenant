@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Covenant.Core;
+using NLog;
 
 namespace Covenant.Models.Listeners
 {
@@ -142,6 +143,7 @@ namespace Covenant.Models.Listeners
                             string parsed_guid = parsed[1];
                             if (parsed_guid.Contains("\0"))
                             {
+                                // await LoggingService.Log(LogAction.Create, LogLevel.Error, Event);
                                 Console.WriteLine("Grunt GUID too long, removing data that's probably important.");
                                 parsed_guid = parsed_guid.Substring(0, parsed_guid.IndexOf('\0'));
                             }
@@ -184,6 +186,7 @@ namespace Covenant.Models.Listeners
             byte[] size = new byte[4];
             int totalReadBytes = 0;
             int readBytes;
+            int bytesToRead = 0;
             do
             {
                 readBytes = stream.Read(size, totalReadBytes, size.Length - totalReadBytes);
@@ -198,11 +201,17 @@ namespace Covenant.Models.Listeners
                 readBytes = 0;
                 do
                 {
-                    readBytes = stream.Read(buffer, 0, buffer.Length);
+                    bytesToRead = Math.Min(buffer.Length, len - totalReadBytes);
+                    readBytes = stream.Read(buffer, 0, bytesToRead);
                     if (readBytes == 0) { return null; }
                     ms.Write(buffer, 0, readBytes);
                     totalReadBytes += readBytes;
                 } while (totalReadBytes < len);
+                if (totalReadBytes != len)
+                {
+                    Console.WriteLine("Read too much!");
+
+                }
                 return Common.CovenantEncoding.GetString(ms.ToArray());
             }
         }
