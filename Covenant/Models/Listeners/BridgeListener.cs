@@ -154,7 +154,7 @@ namespace Covenant.Models.Listeners
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Unkown error, stopping to read from socket");
+                    Console.Error.WriteLine("Unkown error, stopping to read from socket");
                 }
             }
         }
@@ -201,7 +201,7 @@ namespace Covenant.Models.Listeners
                 {
                     int currentBytesToRead = buffer.Length;
                     int currentBytesLeft = len - totalReadBytes;
-                    if (currentBytesLeft < buffer.Length)
+                    if (currentBytesLeft < currentBytesToRead)
                     {
                         currentBytesToRead = currentBytesLeft;
                     }
