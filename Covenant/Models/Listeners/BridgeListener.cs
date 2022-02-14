@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Covenant.Core;
-using NLog;
 
 namespace Covenant.Models.Listeners
 {
@@ -186,7 +185,6 @@ namespace Covenant.Models.Listeners
             byte[] size = new byte[4];
             int totalReadBytes = 0;
             int readBytes;
-            int bytesToRead = 0;
             do
             {
                 readBytes = stream.Read(size, totalReadBytes, size.Length - totalReadBytes);
@@ -201,17 +199,18 @@ namespace Covenant.Models.Listeners
                 readBytes = 0;
                 do
                 {
-                    bytesToRead = Math.Min(buffer.Length, len - totalReadBytes);
-                    readBytes = stream.Read(buffer, 0, bytesToRead);
+                    int currentBytesToRead = buffer.Length;
+                    int currentBytesLeft = len - totalReadBytes;
+                    if (currentBytesLeft < buffer.Length)
+                    {
+                        currentBytesToRead = currentBytesLeft;
+                    }
+
+                    readBytes = stream.Read(buffer, 0, currentBytesToRead);
                     if (readBytes == 0) { return null; }
                     ms.Write(buffer, 0, readBytes);
                     totalReadBytes += readBytes;
                 } while (totalReadBytes < len);
-                if (totalReadBytes != len)
-                {
-                    Console.WriteLine("Read too much!");
-
-                }
                 return Common.CovenantEncoding.GetString(ms.ToArray());
             }
         }
