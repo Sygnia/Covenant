@@ -74,6 +74,7 @@ namespace Covenant.Models.Listeners
         private async Task Run(CancellationToken token)
         {
             CancellationTokenSource clientSource = null;
+            List<CancellationTokenSource> CancellationsList = new List<CancellationTokenSource>();
             TcpListener listener = new TcpListener(IPAddress.Parse(this.BindAddress), this.BindPort);
             listener.Start();
             while (!token.IsCancellationRequested)
@@ -81,17 +82,17 @@ namespace Covenant.Models.Listeners
                 TcpClient client = await listener.AcceptTcpClientAsync();
                 client.ReceiveTimeout = 0;
                 client.SendTimeout = 0;
-                if (clientSource != null)
-                {
-                    clientSource.Cancel();
-                    clientSource.Dispose();
-                }
+
                 clientSource = new CancellationTokenSource();
+                CancellationsList.Add(clientSource);
                 this.IsBridgeConnected = true;
                 _ = Task.Run(async () => await RunClient(client, clientSource.Token), clientSource.Token);
             }
-            clientSource.Cancel();
-            clientSource.Dispose();
+            foreach (CancellationTokenSource cancellation in CancellationsList)
+            {
+                cancellation.Cancel();
+                cancellation.Dispose();
+            }
         }
 
         private async Task RunClient(TcpClient client, CancellationToken token)
@@ -99,10 +100,22 @@ namespace Covenant.Models.Listeners
             NetworkStream stream = client.GetStream();
             stream.ReadTimeout = Timeout.Infinite;
             stream.WriteTimeout = Timeout.Infinite;
+
+            EventWaitHandle GuidEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
+            bool IsGuidSet = false;
+            string Guid = "";
+
             this.InternalListener.OnNewMessage += (sender, e) =>
             {
                 _ = Task.Run(async () =>
                 {
+                    // Wait for first read to know the guid.
+                    GuidEvent.WaitOne();
+                    if (e.Guid != Guid)
+                    {
+                        // If not, the message is for another parallel callback.
+                        return;
+                    }
                     while (!token.IsCancellationRequested)
                     {
                         try
@@ -145,6 +158,13 @@ namespace Covenant.Models.Listeners
                                 // await LoggingService.Log(LogAction.Create, LogLevel.Error, Event);
                                 Console.WriteLine("Grunt GUID too long, removing data that's probably important.");
                                 parsed_guid = parsed_guid.Substring(0, parsed_guid.IndexOf('\0'));
+                            }
+
+                            if (!IsGuidSet)
+                            {
+                                Guid = parsed_guid;
+                                IsGuidSet = true;
+                                GuidEvent.Set();
                             }
 
                             _guids.Add(parsed_guid);
