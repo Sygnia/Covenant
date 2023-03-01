@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
 using Covenant.Core;
@@ -28,14 +29,35 @@ namespace Covenant.Models.Launchers
             string stager = Convert.ToBase64String(StagerAssembly);
             
             string code = CodeTemplate.Replace("{{GRUNT_IL_BYTE_STRING}}", stager);
-            
-            var references = grunt.DotNetVersion == Common.DotNetVersion.Net35 ? Common.DefaultNet35References : Common.DefaultNet40References;
-            references.Add(new Compiler.Reference
+
+            List<Compiler.Reference> references = null;
+            if (grunt.DotNetVersion == Common.DotNetVersion.Net35)
             {
-                File = grunt.DotNetVersion == Common.DotNetVersion.Net35 ? Common.CovenantAssemblyReferenceNet35Directory + "System.ServiceProcess.dll" : Common.CovenantAssemblyReferenceNet40Directory + "System.ServiceProcess.dll",
-                Framework = grunt.DotNetVersion,
-                Enabled = true
-            });
+                references = Common.DefaultNet35References;
+                references.Add(new Compiler.Reference
+                {
+                    File = Common.CovenantAssemblyReferenceNet35Directory + "System.ServiceProcess.dll",
+                    Framework = grunt.DotNetVersion,
+                    Enabled = true
+                });
+            } else if (grunt.DotNetVersion == Common.DotNetVersion.Net40)
+            {
+                references = Common.DefaultNet40References;
+                references.Add(new Compiler.Reference
+                {
+                    File = Common.CovenantAssemblyReferenceNet40Directory + "System.ServiceProcess.dll",
+                    Framework = grunt.DotNetVersion,
+                    Enabled = true
+                });
+            } else if (grunt.DotNetVersion == Common.DotNetVersion.Net472) {
+                references = Common.DefaultNet472References;
+                references.Add(new Compiler.Reference
+                {
+                    File = Common.CovenantAssemblyReferenceNet472Directory + "System.ServiceProcess.dll",
+                    Framework = grunt.DotNetVersion,
+                    Enabled = true
+                });
+            }
 
             this.LauncherILBytes = Compiler.Compile(new Compiler.CsharpFrameworkCompilationRequest
             {

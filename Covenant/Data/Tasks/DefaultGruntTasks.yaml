@@ -10,6 +10,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: Assembly
@@ -39,6 +40,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: ''
   TaskingType: Assembly
   UnsafeCompile: false
@@ -104,6 +106,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: Exit
@@ -125,6 +128,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: Tasks
@@ -146,6 +150,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: TaskKill
@@ -175,6 +180,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: SetDelay
@@ -204,6 +210,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: SetJitter
@@ -233,6 +240,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: SetConnectAttempts
@@ -262,6 +270,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   - Net50
   Code: ''
   TaskingType: SetKillDate
@@ -291,6 +300,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: ''
   TaskingType: Disconnect
   UnsafeCompile: false
@@ -319,6 +329,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -354,6 +365,21 @@
   Options: []
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
+  - Name: System.Drawing.dll
+    Location: net472\System.Drawing.dll
+    DotNetVersion: Net472
+  - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
+  - Name: System.Windows.Forms.dll
+    Location: net472\System.Windows.Forms.dll
+    DotNetVersion: Net472
   - Name: System.Drawing.dll
     Location: net40\System.Drawing.dll
     DotNetVersion: Net40
@@ -397,6 +423,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -467,6 +494,15 @@
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
   - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
+  - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
   - Name: System.Core.dll
@@ -497,6 +533,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -536,6 +573,15 @@
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
   - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
+  - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
   - Name: System.Core.dll
@@ -566,6 +612,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Security.Principal;
@@ -587,6 +634,15 @@
   Options: []
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
+  - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
   - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
@@ -619,6 +675,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -640,6 +697,16 @@
   Options: []
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
+  - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
   - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
@@ -672,6 +739,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -769,6 +837,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -798,6 +867,15 @@
     FileOption: false
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
+  - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
   - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
@@ -830,6 +908,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -860,6 +939,15 @@
     FileOption: false
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
+  - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
   - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
@@ -893,6 +981,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -936,6 +1025,15 @@
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
   - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
+  - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
   - Name: System.Core.dll
@@ -967,6 +1065,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -1006,6 +1105,15 @@
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
   - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
+  - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40
   - Name: System.Core.dll
@@ -1036,6 +1144,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Diagnostics;
@@ -1078,6 +1187,15 @@
     FileOption: false
   ReferenceSourceLibraries: []
   ReferenceAssemblies:
+  - Name: System.dll
+    Location: net472\System.dll
+    DotNetVersion: Net472
+  - Name: System.Core.dll
+    Location: net472\System.Core.dll
+    DotNetVersion: Net472
+  - Name: mscorlib.dll
+    Location: net472\mscorlib.dll
+    DotNetVersion: Net472
   - Name: System.dll
     Location: net40\System.dll
     DotNetVersion: Net40

@@ -21,6 +21,8 @@ namespace Covenant.API.Models
         Net35,
         [EnumMember(Value = "Net40")]
         Net40,
+        [EnumMember(Value = "Net472")]
+        Net472,
         [EnumMember(Value = "Net50")]
         Net50
     }
@@ -39,6 +41,8 @@ namespace Covenant.API.Models
                     return "Net35";
                 case DotNetVersion.Net40:
                     return "Net40";
+                case DotNetVersion.Net472:
+                    return "Net472";
                 case DotNetVersion.Net50:
                     return "Net50";
             }
@@ -53,6 +57,8 @@ namespace Covenant.API.Models
                     return DotNetVersion.Net35;
                 case "Net40":
                     return DotNetVersion.Net40;
+                case "Net472":
+                    return DotNetVersion.Net472;
                 case "Net50":
                     return DotNetVersion.Net50;
             }

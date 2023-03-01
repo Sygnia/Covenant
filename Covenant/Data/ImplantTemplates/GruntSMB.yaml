@@ -14,6 +14,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   StagerCode: |
     using System;
     using System.Net;
