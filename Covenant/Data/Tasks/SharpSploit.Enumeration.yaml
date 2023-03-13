@@ -10,6 +10,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Text;
@@ -116,6 +117,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Text;
@@ -220,6 +222,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Text;
@@ -332,6 +335,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Text;
@@ -436,6 +440,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Collections.Generic;
@@ -541,6 +546,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Text;
@@ -729,6 +735,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Text;
@@ -947,6 +954,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Text;
@@ -1181,6 +1189,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -1847,6 +1856,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.Linq;
@@ -1977,6 +1987,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
 
@@ -2070,6 +2081,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
 
@@ -2154,6 +2166,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
 
@@ -2261,6 +2274,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
 
@@ -2353,6 +2367,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
 
@@ -2468,6 +2483,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
 
@@ -2776,6 +2792,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
@@ -2929,6 +2946,7 @@
   CompatibleDotNetVersions:
   - Net35
   - Net40
+  - Net472
   Code: |
     using System;
     using System.IO;
