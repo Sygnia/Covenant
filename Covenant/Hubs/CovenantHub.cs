@@ -648,6 +648,11 @@ namespace Covenant.Hubs
         {
             return _service.GetDefaultNet40ReferenceAssemblies();
         }
+        
+        public Task<IEnumerable<ReferenceAssembly>> GetDefaultNet472ReferenceAssemblies()
+        {
+            return _service.GetDefaultNet472ReferenceAssemblies();
+        }
 
         public Task<string> GetDownloadContent(int eventId)
         {

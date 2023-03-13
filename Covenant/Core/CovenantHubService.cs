@@ -660,6 +660,11 @@ namespace Covenant.Core
             return _connection.InvokeAsync<IEnumerable<ReferenceAssembly>>("GetDefaultNet40ReferenceAssemblies");
         }
 
+        public Task<IEnumerable<ReferenceAssembly>> GetDefaultNet472ReferenceAssemblies()
+        {
+            return _connection.InvokeAsync<IEnumerable<ReferenceAssembly>>("GetDefaultNet472ReferenceAssemblies");
+        }
+
         public Task<DownloadEvent> GetDownloadEvent(int eventId)
         {
             return _connection.InvokeAsync<DownloadEvent>("GetDownloadEvent", eventId);

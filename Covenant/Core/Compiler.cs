@@ -288,6 +288,7 @@ namespace Covenant.Core
             project.Load(doc);
             project.ProbePaths.Add(Common.CovenantAssemblyReferenceNet35Directory);
             project.ProbePaths.Add(Common.CovenantAssemblyReferenceNet40Directory);
+            project.ProbePaths.Add(Common.CovenantAssemblyReferenceNet472Directory);
 
             ConfuserParameters parameters = new ConfuserParameters();
             parameters.Project = project;

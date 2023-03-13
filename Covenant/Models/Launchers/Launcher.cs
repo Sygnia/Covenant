@@ -199,6 +199,10 @@ namespace Covenant.Models.Launchers
             {
                 tempDiskCode = tempDiskCode.Replace("{{REPLACE_VERSION_SETTER}}", JScriptNet40VersionSetter);
             }
+            else if (this.DotNetVersion == Common.DotNetVersion.Net472)
+            {
+                tempDiskCode = tempDiskCode.Replace("{{REPLACE_VERSION_SETTER}}", JScriptNet472VersionSetter);
+            }
             this.DiskCode = Common.CovenantEncoding.GetBytes(tempDiskCode);
             return GetLauncher();
         }
@@ -250,6 +254,9 @@ var o = delegate.DynamicInvoke(array.ToArray()).CreateInstance('Grunt.GruntStage
         protected static string JScriptNet40VersionSetter =
 @"var s = new ActiveXObject('Wscript.Shell');
 s.Environment('Process')('COMPLUS_Version') = 'v4.0.30319';";
+        protected static string JScriptNet472VersionSetter =
+@"var s = new ActiveXObject('Wscript.Shell');
+s.Environment('Process')('COMPLUS_Version') = 'v4.0.30319';";
 
         protected static String VBScriptTemplate =
 @"Function Base64ToStream(bytes)
@@ -275,6 +282,11 @@ array.Add Empty
 Set delegate = formatter.Deserialize_2(Base64ToStream(s))
 Set output = delegate.DynamicInvoke(array.ToArray()).CreateInstance(""Grunt.GruntStager"")";
         protected static String VBScriptNet40VersionSetter =
+@"Dim shell, ver
+  Set shell = CreateObject(""WScript.Shell"")
+  ver = ""v4.0.30319""
+  shell.Environment(""Process"").Item(""COMPLUS_Version"") = ver";
+        protected static String VBScriptNet472VersionSetter =
 @"Dim shell, ver
   Set shell = CreateObject(""WScript.Shell"")
   ver = ""v4.0.30319""

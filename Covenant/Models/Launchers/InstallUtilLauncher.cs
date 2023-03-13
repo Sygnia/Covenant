@@ -29,14 +29,34 @@ namespace Covenant.Models.Launchers
             this.LauncherILBytes = StagerAssembly;
             string code = CodeTemplate.Replace("{{GRUNT_IL_BYTE_STRING}}", Convert.ToBase64String(this.LauncherILBytes));
 
-            List<Compiler.Reference> references = grunt.DotNetVersion == Common.DotNetVersion.Net35 ? Common.DefaultNet35References : Common.DefaultNet40References;
-            references.Add(new Compiler.Reference
+            List<Compiler.Reference> references = null;
+            if (grunt.DotNetVersion == Common.DotNetVersion.Net35)
             {
-                File = grunt.DotNetVersion == Common.DotNetVersion.Net35 ? Common.CovenantAssemblyReferenceNet35Directory + "System.Configuration.Install.dll" :
-                                                                                    Common.CovenantAssemblyReferenceNet40Directory + "System.Configuration.Install.dll",
-                Framework = grunt.DotNetVersion,
-                Enabled = true
-            });
+                references = Common.DefaultNet35References;
+                references.Add(new Compiler.Reference
+                {
+                    File = Common.CovenantAssemblyReferenceNet35Directory + "System.Configuration.Install.dll",
+                    Framework = grunt.DotNetVersion,
+                    Enabled = true
+                });
+            } else if (grunt.DotNetVersion == Common.DotNetVersion.Net40) { 
+                references = Common.DefaultNet40References;
+                references.Add(new Compiler.Reference
+                {
+                    File = Common.CovenantAssemblyReferenceNet40Directory + "System.Configuration.Install.dll",
+                    Framework = grunt.DotNetVersion,
+                    Enabled = true
+                });
+            } else if (grunt.DotNetVersion == Common.DotNetVersion.Net472){
+                references = Common.DefaultNet472References;
+                references.Add(new Compiler.Reference
+                {
+                    File = Common.CovenantAssemblyReferenceNet472Directory + "System.Configuration.Install.dll",
+                    Framework = grunt.DotNetVersion,
+                    Enabled = true
+                });
+            }
+                
             this.DiskCode = Compiler.Compile(new Compiler.CsharpFrameworkCompilationRequest
             {
                 Language = template.Language,

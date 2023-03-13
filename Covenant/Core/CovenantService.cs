@@ -126,6 +126,7 @@ namespace Covenant.Core
         Task<IEnumerable<ReferenceAssembly>> GetReferenceAssemblies();
         Task<IEnumerable<ReferenceAssembly>> GetDefaultNet35ReferenceAssemblies();
         Task<IEnumerable<ReferenceAssembly>> GetDefaultNet40ReferenceAssemblies();
+        Task<IEnumerable<ReferenceAssembly>> GetDefaultNet472ReferenceAssemblies();
         Task<ReferenceAssembly> GetReferenceAssembly(int id);
         Task<ReferenceAssembly> GetReferenceAssemblyByName(string name, Common.DotNetVersion version);
         Task<ReferenceAssembly> CreateReferenceAssembly(ReferenceAssembly assembly);
@@ -1701,7 +1702,7 @@ namespace Covenant.Core
         private byte[] CompileGruntCode(string CodeTemplate, ImplantTemplate template, Grunt grunt, Listener listener, Profile profile, OutputKind outputKind = OutputKind.DynamicallyLinkedLibrary, bool Compress = false, Compiler.RuntimeIdentifier runtimeIdentifier = Compiler.RuntimeIdentifier.win_x64)
         {
             byte[] ILBytes = null;
-            if (grunt.DotNetVersion == Common.DotNetVersion.Net35 || grunt.DotNetVersion == Common.DotNetVersion.Net40)
+            if (grunt.DotNetVersion == Common.DotNetVersion.Net35 || grunt.DotNetVersion == Common.DotNetVersion.Net40 || grunt.DotNetVersion == Common.DotNetVersion.Net472)
             {
                 List<Compiler.Reference> references = null;
                 switch (grunt.DotNetVersion)
@@ -1711,6 +1712,9 @@ namespace Covenant.Core
                         break;
                     case Common.DotNetVersion.Net40:
                         references = Common.DefaultNet40References;
+                        break;
+                    case Common.DotNetVersion.Net472:
+                        references = Common.DefaultNet472References;
                         break;
                 }
                 references.AddRange(template.ReferenceAssemblies.Select(RA => new Compiler.Reference
@@ -2035,6 +2039,16 @@ namespace Covenant.Core
                 await this.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
                 await this.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
                 await this.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40)
+            };
+        }
+        
+        public async Task<IEnumerable<ReferenceAssembly>> GetDefaultNet472ReferenceAssemblies()
+        {
+            return new List<ReferenceAssembly>
+            {
+                await this.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
+                await this.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
+                await this.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472)
             };
         }
 

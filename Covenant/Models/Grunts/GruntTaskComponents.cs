@@ -48,7 +48,7 @@ namespace Covenant.Models.Grunts
         public string Description { get; set; }
         public string Location { get; set; }
         public ImplantLanguage Language { get; set; } = ImplantLanguage.CSharp;
-        public List<Common.DotNetVersion> CompatibleDotNetVersions { get; set; } = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 };
+        public List<Common.DotNetVersion> CompatibleDotNetVersions { get; set; } = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 };
 
         public List<ReferenceAssembly> ReferenceAssemblies { get; set; } = new List<ReferenceAssembly>();
         public List<EmbeddedResource> EmbeddedResources { get; set; } = new List<EmbeddedResource>();

@@ -128,6 +128,16 @@ namespace Covenant.Core
                         DotNetVersion = Common.DotNetVersion.Net40
                     });
                 });
+                Directory.GetFiles(Common.CovenantAssemblyReferenceNet472Directory).ToList().ForEach(R =>
+                {
+                    FileInfo info = new FileInfo(R);
+                    ReferenceAssemblies.Add(new ReferenceAssembly
+                    {
+                        Name = info.Name,
+                        Location = info.FullName.Replace(Common.CovenantAssemblyReferenceDirectory, ""),
+                        DotNetVersion = Common.DotNetVersion.Net472
+                    });
+                });
                 await service.CreateReferenceAssemblies(ReferenceAssemblies.ToArray());
             }
             if (!context.EmbeddedResources.Any())
@@ -153,31 +163,41 @@ namespace Covenant.Core
                     {
                         Name = "SharpSploit", Description = "SharpSploit is a library for C# post-exploitation modules.",
                         Location =  "SharpSploit" + Path.DirectorySeparatorChar + "SharpSploit" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.Protocols.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.Protocols.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.DirectoryServices.Protocols.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Management.Automation.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Management.Automation.dll", Common.DotNetVersion.Net40),
                             await service.GetReferenceAssemblyByName("System.Windows.Forms.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Windows.Forms.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Windows.Forms.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net472),
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },
@@ -185,21 +205,27 @@ namespace Covenant.Core
                     {
                         Name = "Rubeus", Description = "Rubeus is a C# toolset for raw Kerberos interaction and abuses.",
                         Location = "Rubeus" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.AccountManagement.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.AccountManagement.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.DirectoryServices.AccountManagement.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net472)
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },
@@ -207,31 +233,42 @@ namespace Covenant.Core
                     {
                         Name = "Seatbelt", Description = "Seatbelt is a C# project that performs a number of security oriented host-survey \"safety checks\" relevant from both offensive and defensive security perspectives.",
                         Location = "Seatbelt" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Web.Extensions.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Web.Extensions.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Web.Extensions.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Data.DataSetExtensions.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Data.DataSetExtensions.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Data.DataSetExtensions.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Windows.Forms.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.Windows.Forms.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.Windows.Forms.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Windows.Forms.dll", Common.DotNetVersion.Net472)
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },
@@ -239,19 +276,24 @@ namespace Covenant.Core
                     {
                         Name = "SharpDPAPI", Description = "SharpDPAPI is a C# port of some Mimikatz DPAPI functionality.",
                         Location = "SharpDPAPI" + Path.DirectorySeparatorChar + "SharpDPAPI" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Security.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.Security.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.Security.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Security.dll", Common.DotNetVersion.Net472)
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },
@@ -259,21 +301,27 @@ namespace Covenant.Core
                      {
                          Name = "SharpChrome", Description = "SharpChrome is a C# port of some Mimikatz DPAPI functionality targeting Google Chrome.",
                          Location = "SharpDPAPI" + Path.DirectorySeparatorChar,
-                         CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                         CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                          ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Security.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Security.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Security.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net472)
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                      },
@@ -281,15 +329,18 @@ namespace Covenant.Core
                     {
                         Name = "SharpDump", Description = "SharpDump is a C# port of PowerSploit's Out-Minidump.ps1 functionality.",
                         Location = "SharpDump" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472)
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },
@@ -297,21 +348,27 @@ namespace Covenant.Core
                     {
                         Name = "SharpUp", Description = "SharpUp is a C# port of various PowerUp functionality.",
                         Location = "SharpUp" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.XML.dll", Common.DotNetVersion.Net472)
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },
@@ -319,17 +376,21 @@ namespace Covenant.Core
                     {
                         Name = "SharpWMI", Description = "SharpWMI is a C# implementation of various WMI functionality.",
                         Location = "SharpWMI" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net472)
 
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
@@ -338,17 +399,21 @@ namespace Covenant.Core
                     {
                         Name = "SharpSC", Description = "SharpSC is a .NET assembly to perform basic operations with services.",
                         Location= "SharpSC" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net35),
-                            await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net40)
+                            await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.ServiceProcess.dll", Common.DotNetVersion.Net472),
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },                    
@@ -356,17 +421,21 @@ namespace Covenant.Core
                     {
                         Name = "SharpRDP", Description = "Run SharpRDP command",
                         Location= "SharpRDP" + Path.DirectorySeparatorChar +"SharpRDP" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Data.dll", Common.DotNetVersion.Net472),
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     },
@@ -374,23 +443,30 @@ namespace Covenant.Core
                     {
                         Name = "SharpEDRChecker", Description = "C# implementation of EDR Checker",
                         Location= "SharpEDRChecker" + Path.DirectorySeparatorChar,
-                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40 },
+                        CompatibleDotNetVersions = new List<Common.DotNetVersion> { Common.DotNetVersion.Net35, Common.DotNetVersion.Net40, Common.DotNetVersion.Net472 },
                         ReferenceAssemblies = new List<ReferenceAssembly>
                         {
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("mscorlib.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Core.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.DirectoryServices.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.AccountManagement.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.DirectoryServices.AccountManagement.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.DirectoryServices.AccountManagement.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.IdentityModel.dll", Common.DotNetVersion.Net472),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net35),
                             await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net40),
+                            await service.GetReferenceAssemblyByName("System.Management.dll", Common.DotNetVersion.Net472),
                         },
                         EmbeddedResources = new List<EmbeddedResource>()
                     }

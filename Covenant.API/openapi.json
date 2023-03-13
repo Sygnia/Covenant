@@ -5903,6 +5903,7 @@
       "enum": [
         "Net35",
         "Net40",
+        "Net472",
         "NetCore31"
       ],
       "type": "string",

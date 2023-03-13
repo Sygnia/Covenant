@@ -197,6 +197,11 @@ namespace Covenant.Models.Listeners
             return File.ReadAllBytes(Common.CovenantTaskCSharpCompiledNet40Directory + taskname + ".compiled");
         }
 
+        private byte[] GetCompressedILAssembly472(string taskname)
+        {
+            return File.ReadAllBytes(Common.CovenantTaskCSharpCompiledNet472Directory + taskname + ".compiled");
+        }
+
         private byte[] GetCompressedILAssembly50(string taskname)
         {
             return File.ReadAllBytes(Common.CovenantTaskCSharpCompiledNet50Directory + taskname + ".compiled");
@@ -218,6 +223,14 @@ namespace Covenant.Models.Listeners
                 else if (version == APIModels.DotNetVersion.Net40)
                 {
                     Message = Convert.ToBase64String(this.GetCompressedILAssembly40(tasking.GruntTask.Name));
+                    if (tasking.Parameters.Any())
+                    {
+                        Message += "," + String.Join(",", tasking.Parameters.Select(P => Convert.ToBase64String(Common.CovenantEncoding.GetBytes(P))));
+                    }
+                }
+                else if (version == APIModels.DotNetVersion.Net472)
+                {
+                    Message = Convert.ToBase64String(this.GetCompressedILAssembly472(tasking.GruntTask.Name));
                     if (tasking.Parameters.Any())
                     {
                         Message += "," + String.Join(",", tasking.Parameters.Select(P => Convert.ToBase64String(Common.CovenantEncoding.GetBytes(P))));
